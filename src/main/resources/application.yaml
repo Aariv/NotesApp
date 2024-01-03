@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/notes?createDatabaseIfNotExist=true
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+    database: postgresql
+    defer-datasource-initialization: true
+  sql:
+    init:
+      platform: postgres
+      mode: always
+  elasticsearch:
+    rest:
+      uris: http://localhost:9200
+      rest:
+        connection-timeout: 10000
+        read-timeout: 10000
+jwtSecret: ======================BezKoder=Spring===========================
+jwtExpirationMs: 86400000
