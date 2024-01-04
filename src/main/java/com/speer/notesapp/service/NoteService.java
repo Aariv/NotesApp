@@ -1,10 +1,9 @@
 package com.speer.notesapp.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,25 +17,26 @@ import com.speer.notesapp.repository.NoteRepository;
 import com.speer.notesapp.repository.UserRepository;
 import com.speer.notesapp.security.JwtUtils;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-
+/**
+ * We can add REDIS/Memcached so that the for frequent request we can serve from Cache instead from DB.
+ * 
+ * @author Ariv
+ *
+ */
 @Service
 public class NoteService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(NoteService.class);
-
 	@Autowired
 	private NoteRepository noteRepository;
 
 	@Autowired
 	private UserRepository userRepository;
 
-	@PersistenceContext
-	protected EntityManager entityManager;
-	
 	@Autowired
 	private JwtUtils jwtUtils;
+
+//	@PersistenceContext
+//	protected EntityManager entityManager;
 
 	/**
 	 * 
@@ -117,21 +117,34 @@ public class NoteService {
 	}
 
 	/**
+	 * TODO: 
+	 * 
+	 * 1. We can use elastic-search to index all the notes and have query from there.
+	 * 2. We can also use Hibernate-Search for the better performance.
+	 * 
 	 * 
 	 * @param searcText
 	 * @return
 	 */
-	public List<NoteDto> searchNotes(String searcText) {
-//		SearchSession searchSession = (SearchSession) entityManager.getDelegate();
+	public List<NoteDto> searchNotes(String searchText) {
+		List<NoteDto> result = new ArrayList<>();
+		List<Note> searchResults = noteRepository.searchNotes(searchText);
+		result.addAll(NoteMapper.mapToNoteDtos(searchResults));
+		return result;
+	}
+	
+//	public List<NoteDto> elasticSearch(String searcText) {
+//
+//		SearchSession searchSession = Search.session(entityManager);
 //
 //		SearchResult<Note> result = searchSession.search(Note.class).extension(ElasticsearchExtension.get())
-//				.where(f -> f.simpleQueryString().fields("title", "description").matching(searcText)).fetch(1000);
+//				.where(f -> f.simpleQueryString().fields("title","description").matching(searcText)).fetch(1000);
 //
-//		List<Note> notes = result.hits();
-//		List<NoteDto> results = NoteMapper.mapToNoteDtos(notes);
-//		long totalHitCount = result.total().hitCount();
-//		logger.info("Total hit count:" + totalHitCount);
-//		return results;
-		return null;
-	}
+//		List<Note> results = result.hits();
+////		long totalHitCount = result.total().hitCount();
+////		log.info("Total hit count:" + totalHitCount);
+//		List<NoteDto> responseResult = new ArrayList<>();
+//		responseResult.addAll(NoteMapper.mapToNoteDtos(results));
+//		return responseResult;
+//	}
 }

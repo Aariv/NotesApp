@@ -22,7 +22,8 @@ public class SearchController {
 	private NoteService noteService;
 
 	@GetMapping
-	public ResponseEntity<List<NoteDto>> searchNotes(@RequestParam String q) {
-		return ResponseEntity.ok(noteService.searchNotes(q));
+	public ResponseEntity<List<NoteDto>> searchNotes(@RequestParam String searchText) {
+//		return ResponseEntity.ok(noteService.elasticSearch(searchText));
+		return ResponseEntity.ok(noteService.searchNotes(searchText));
 	}
 }

@@ -18,12 +18,13 @@ import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Data
-@Entity
 //@Indexed
+@Entity
 public class Note {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@GenericField(sortable = Sortable.YES, searchable = Searchable.YES)
 	private Long id;
 
 //	@FullTextField

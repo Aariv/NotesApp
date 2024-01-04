@@ -16,5 +16,14 @@ public interface NoteRepository extends JpaRepository<Note, Long>{
 	
 	@Query("SELECT n FROM Note n JOIN n.sharedWith s WHERE s.username LIKE %?1%")
 	List<Note> findAllNotes(String username);
+	
+	@Query("SELECT n FROM Note n WHERE " +
+            "lower(n.title) LIKE CONCAT('%',:query, '%')" +
+            "Or lower(n.description) LIKE CONCAT('%', :query, '%')")
+	List<Note> searchNotes(String query);
+	
+	@Query(value = "SELECT * FROM note WHERE MATCH(title, description) "
+            + "AGAINST (?1)", nativeQuery = true)          
+	List<Note> search(String keyword);
 
 }
