@@ -17,8 +17,12 @@
 # How to use this code?
 
 1. Make sure you have [Java 17 and above](https://www.java.com/download/) and [Maven](https://maven.apache.org) installed
-
-2. Fork this repository and clone it
+2. Create Database
+```
+$ psql -U postgres (Enter your password)
+$ CREATE DATABASE note;
+```
+3. Fork this repository and clone it
   
 ```
 $ git clone https://github.com/Aariv/NotesApp
