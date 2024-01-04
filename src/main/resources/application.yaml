@@ -15,11 +15,6 @@ spring:
     init:
       platform: postgres
       mode: always
-  elasticsearch:
-    rest:
-      uris: http://localhost:9200
-      rest:
-        connection-timeout: 10000
-        read-timeout: 10000
+
 jwtSecret: ======================BezKoder=Spring===========================
 jwtExpirationMs: 86400000

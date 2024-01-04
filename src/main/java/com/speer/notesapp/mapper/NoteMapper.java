@@ -1,6 +1,7 @@
 package com.speer.notesapp.mapper;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.speer.notesapp.dto.NoteDto;
@@ -40,7 +41,7 @@ public class NoteMapper {
 		Note note = new Note();
 		note.setTitle(noteDto.getTitle());
 		note.setDescription(noteDto.getDescription());
-		note.setDate(noteDto.getDate());
+		note.setDate(new Date());
 		note.setId(noteDto.getId());
 		return note;
 	}

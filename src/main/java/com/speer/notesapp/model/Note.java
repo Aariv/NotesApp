@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.data.elasticsearch.annotations.Document;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
@@ -21,16 +19,18 @@ import lombok.Data;
 
 @Data
 @Entity
-@Document(indexName = "note")
+//@Indexed
 public class Note {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+//	@FullTextField
 	private String title;
 
 	@Column(length = 1000)
+//	@FullTextField
 	private String description;
 
 	@JsonFormat(pattern = "yyyy-MM-dd")

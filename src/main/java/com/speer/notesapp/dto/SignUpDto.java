@@ -1,14 +1,18 @@
 package com.speer.notesapp.dto;
 
-import java.util.Set;
-
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class SignUpDto {
 
 	private String username;
 	private String password;
-	// It's optional
-	private Set<String> role;
+	
+	public SignUpDto(String username, String password) {
+		this.username = username;
+		this.password = password;
+	}
+	
 }

@@ -5,15 +5,25 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.speer.notesapp.model.User;
+import com.speer.notesapp.repository.UserRepository;
 import com.speer.notesapp.security.services.UserDetailsImpl;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class JwtUtils {
@@ -24,6 +34,9 @@ public class JwtUtils {
 
 	@Value("${jwtExpirationMs}")
 	private int jwtExpirationMs;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	public String generateJwtToken(Authentication authentication) {
 
@@ -40,6 +53,21 @@ public class JwtUtils {
 
 	public String getUserNameFromJwtToken(String token) {
 		return Jwts.parserBuilder().setSigningKey(key()).build().parseClaimsJws(token).getBody().getSubject();
+	}
+	
+	public String getCurrentUserName() {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+				.getRequest();
+		String token = request.getHeader("Authorization").split(" ")[1];
+		return getUserNameFromJwtToken(token);
+	}
+	
+	public User getCurrentUser() {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+				.getRequest();
+		String token = request.getHeader("Authorization").split(" ")[1];
+		String username = getUserNameFromJwtToken(token);
+		return userRepository.findByUsername(username).get();
 	}
 
 	public boolean validateJwtToken(String authToken) {

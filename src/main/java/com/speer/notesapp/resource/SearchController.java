@@ -23,7 +23,6 @@ public class SearchController {
 
 	@GetMapping
 	public ResponseEntity<List<NoteDto>> searchNotes(@RequestParam String q) {
-		
-		return null;
+		return ResponseEntity.ok(noteService.searchNotes(q));
 	}
 }
