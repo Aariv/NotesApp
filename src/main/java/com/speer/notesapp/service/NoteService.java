@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,9 @@ import com.speer.notesapp.repository.NoteRepository;
 import com.speer.notesapp.repository.UserRepository;
 import com.speer.notesapp.security.JwtUtils;
 
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+
 /**
  * We can add REDIS/Memcached so that the for frequent request we can serve from Cache instead from DB.
  * 
@@ -24,7 +29,10 @@ import com.speer.notesapp.security.JwtUtils;
  *
  */
 @Service
+@RateLimiter(name = "simpleRateLimit")
 public class NoteService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(NoteService.class);
 	
 	@Autowired
 	private NoteRepository noteRepository;
@@ -42,6 +50,7 @@ public class NoteService {
 	 * 
 	 * @return
 	 */
+	@RateLimiter(name = "simpleRateLimit", fallbackMethod = "getAllNotesFallbackMethod")
 	public List<NoteDto> getAllNotes() {
 		List<Note> notes = noteRepository.findByUserUsername(jwtUtils.getCurrentUserName());
 		List<Note> sharedNotes = noteRepository.findAllNotes(jwtUtils.getCurrentUserName());
@@ -49,6 +58,12 @@ public class NoteService {
         return NoteMapper.mapToNoteDtos(notes);
 	}
 
+	private List<NoteDto> getAllNotesFallbackMethod(RequestNotPermitted requestNotPermitted) {
+		logger.info("Fallback method called.");
+		logger.info("RequestNotPermitted exception message: {}", requestNotPermitted.getMessage());
+        return new ArrayList<NoteDto>();
+    }
+	
 	/**
 	 * 
 	 * @param id

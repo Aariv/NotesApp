@@ -3,7 +3,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: postgres
-    url: jdbc:postgresql://localhost:5432/notes?createDatabaseIfNotExist=true
+    url: jdbc:postgresql://localhost:5432/notes # notes DB should be manualy created
   jpa:
     show-sql: true
     generate-ddl: true
@@ -24,5 +24,32 @@ spring:
       platform: postgres
       mode: always
 
-jwtSecret: ======================BezKoder=Spring===========================
+jwtSecret: ======================SomeCode=Spring===========================
 jwtExpirationMs: 86400000
+
+management:
+  endpoint:
+    health:
+      show-details: ALWAYS
+  health:
+    ratelimiters:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+resilience4j.ratelimiter:
+  instances:
+    simpleRateLimit:
+      limitForPeriod: 2
+      limitRefreshPeriod: 15s
+      timeoutDuration: 5s
+      registerHealthIndicator: true
+      subscribeForEvents: true
+    rateLimiterEventsExample:
+      limitForPeriod: 2
+      limitRefreshPeriod: 10s
+      timeoutDuration: 5s
+      registerHealthIndicator: true
+      subscribeForEvents: true
