@@ -47,9 +47,15 @@ resilience4j.ratelimiter:
       timeoutDuration: 5s
       registerHealthIndicator: true
       subscribeForEvents: true
-    rateLimiterEventsExample:
-      limitForPeriod: 2
-      limitRefreshPeriod: 10s
-      timeoutDuration: 5s
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
       registerHealthIndicator: true
-      subscribeForEvents: true
+      slidingWindowSize: 10
+      minimumNumberOfCalls: 5
+      permittedNumberOfCallsInHalfOpenState: 3
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+      waitDurationInOpenState: 5s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10

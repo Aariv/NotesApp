@@ -50,7 +50,7 @@ public class NoteService {
 	 * 
 	 * @return
 	 */
-	@RateLimiter(name = "simpleRateLimit", fallbackMethod = "getAllNotesFallbackMethod")
+//	@RateLimiter(name = "simpleRateLimit", fallbackMethod = "getAllNotesFallbackMethod")
 	public List<NoteDto> getAllNotes() {
 		List<Note> notes = noteRepository.findByUserUsername(jwtUtils.getCurrentUserName());
 		List<Note> sharedNotes = noteRepository.findAllNotes(jwtUtils.getCurrentUserName());

@@ -1,5 +1,7 @@
 package com.speer.notesapp.resource;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import com.speer.notesapp.dto.NoteDto;
 import com.speer.notesapp.dto.ShareNoteDto;
 import com.speer.notesapp.service.NoteService;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -37,9 +40,16 @@ public class NoteController {
 	@Operation(summary = "Current User's All Notes REST API", description = "REST API to fetch all the notes of the current user")
 	@ApiResponses({ @ApiResponse(responseCode = "201", description = "HTTP Status CREATED") })
 	@GetMapping
+	@CircuitBreaker(name = "notesCircuitBreaker", fallbackMethod = "getNotes")
 	public ResponseEntity<List<NoteDto>> getAllNotes() {
 		return ResponseEntity.status(HttpStatus.OK).body(noteService.getAllNotes());
 	}
+	
+	public ResponseEntity<List<NoteDto>> getNotes(Throwable throwable) {
+		List<NoteDto> notes = new ArrayList<>();
+        notes.add(new NoteDto(1L, "", "", new Date()));
+        return ResponseEntity.status(HttpStatus.OK).body(notes);
+    }
 	
 	@Operation(summary = "Fetch Note Details REST API", description = "REST API to fetch note details")
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "HTTP Status Ok") })
