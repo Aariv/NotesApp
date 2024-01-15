@@ -54,3 +54,9 @@ server:
 ```
 # Swagger UI
 <img width="1674" alt="Screenshot 2024-01-04 at 9 53 24 AM" src="https://github.com/Aariv/NotesApp/assets/11393142/0282bcf4-b3f2-4c72-8909-5c4302628ecf">
+
+Build to Docker daemon
+Jib can also build your image directly to a Docker daemon. This uses the docker command line tool and requires that you have docker available on your PATH.
+```
+mvn compile jib:dockerBuild
+```
