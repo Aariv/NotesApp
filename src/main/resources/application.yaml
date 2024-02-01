@@ -11,14 +11,6 @@ spring:
       ddl-auto: update
     database: postgresql
     defer-datasource-initialization: true
-#    properties:
-#      hibernate: 
-#       search: 
-#        enabled: true
-#        schema_management:
-#          strategy: drop-and-create
-#        backend:
-#          hosts: localhost:9200 
   sql:
     init:
       platform: postgres
