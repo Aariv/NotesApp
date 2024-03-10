@@ -1,4 +1,4 @@
-# NotesApp (IN-PROGRESS)
+# NotesApp
 ![](https://img.shields.io/badge/build-success-brightgreen.svg)
 
 # Stack
